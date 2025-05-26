@@ -72,5 +72,10 @@ jobs:
 
       - name: Push Helm chart to GHCR
         run: |
-          repo=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-          helm push "${{ inputs.chart_name }}-$VERSION.tgz" oci://ghcr.io/$repo/charts
+          if [ -z "${{ inputs.registry }}" ]; then
+            repo=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+            registry="oci://ghcr.io/$repo/charts"
+          else
+            registry="${{ inputs.registry }}"
+          fi
+          helm push "${{ inputs.chart_name }}-$VERSION.tgz" $registry

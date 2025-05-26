@@ -1,0 +1,67 @@
+name: Push Helm Chart (Reusable)
+
+description: >
+  Reusable workflow to package and push a Helm chart to GHCR using semver from scripts/semver.sh.
+
+on:
+  workflow_call:
+    inputs:
+      chart_dir:
+        description: 'Directory of the Helm chart (relative to repo root)'
+        required: true
+        type: string
+      chart_name:
+        description: 'Name of the Helm chart'
+        required: true
+        type: string
+      destination:
+        description: 'Destination directory for packaged chart'
+        required: false
+        default: '.'
+        type: string
+      registry:
+        description: 'OCI registry URL (e.g. oci://ghcr.io/org/charts)'
+        required: true
+        type: string
+
+jobs:
+  push-helm-chart:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.0
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download semver.sh
+        run: |
+          mkdir -p scripts
+          curl -sSL "https://raw.githubusercontent.com/tiktai/handler/main/scripts/semver.sh" -o scripts/semver.sh
+          chmod +x scripts/semver.sh
+
+      - name: Generate version with semver.sh
+        id: semver
+        run: |
+          VERSION=$(scripts/semver.sh)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Package Helm chart
+        run: |
+          helm package "${{ inputs.chart_dir }}" --version ${{ steps.semver.outputs.version }} --destination "${{ inputs.destination }}"
+
+      - name: Push Helm chart to GHCR
+        run: |
+          helm push "${{ inputs.destination }}/${{ inputs.chart_name }}-${{ steps.semver.outputs.version }}.tgz" "${{ inputs.registry }}"

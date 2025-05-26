@@ -58,7 +58,7 @@ jobs:
         id: semver
         run: |
           VERSION=$(scripts/semver.sh)
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Version: $VERSION"
 
       - name: Package Helm chart

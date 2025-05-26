@@ -1,12 +1,7 @@
 name: Build with ko
 
 on:
-  push:
-    branches: 
-    - main
-    - 'H-14/*'
-    tags:
-    - 'v*'
+  workflow_call: {}
 
 jobs:
   ko-build:
@@ -16,10 +11,16 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ko-build/setup-ko@v0.9
-      - name: Set version from semver.sh
+      - name: Download semver.sh
+        run: |
+          mkdir -p scripts
+          curl -sSL "https://raw.githubusercontent.com/Tiktai/helm-publish/refs/heads/main/scripts/semver.sh" -o scripts/semver.sh
+          chmod +x scripts/semver.sh
+
+      - name: Generate version with semver.sh
         id: semver
         run: |
-          VERSION=$(./scripts/semver.sh)
+          VERSION=$(scripts/semver.sh)
           VERSION=$(echo $VERSION | sed 's/+/_/g')
 
           echo "VERSION=$VERSION" >> $GITHUB_ENV

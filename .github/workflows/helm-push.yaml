@@ -49,7 +49,7 @@ jobs:
       - name: Download semver.sh
         run: |
           mkdir -p scripts
-          curl -sSL "https://raw.githubusercontent.com/tiktai/handler/main/scripts/semver.sh" -o scripts/semver.sh
+          curl -sSL "https://raw.githubusercontent.com/Tiktai/helm-publish/refs/heads/main/scripts/semver.sh" -o scripts/semver.sh
           chmod +x scripts/semver.sh
 
       - name: Generate version with semver.sh

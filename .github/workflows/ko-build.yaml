@@ -11,6 +11,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ko-build/setup-ko@v0.9
+      
       - name: Download semver.sh
         run: |
           mkdir -p scripts

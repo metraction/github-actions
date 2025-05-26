@@ -65,11 +65,11 @@ jobs:
           echo "Version: $VERSION"
           DOCKER_VERSION=$(echo $VERSION | sed 's/+/_/g')
 
-          helm package helm/handler --destination . \
+          helm package "${{ inputs.chart_dir }}" --destination "${{ inputs.destination }}" \
             --version "$VERSION" \
             --app-version "$DOCKER_VERSION"        
 
       - name: Push Helm chart to GHCR
         run: |
           repo=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-          helm push handler-$VERSION.tgz oci://ghcr.io/$repo/charts
+          helm push "${{ inputs.chart_name }}-$VERSION.tgz" oci://ghcr.io/$repo/charts

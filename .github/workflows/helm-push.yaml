@@ -62,8 +62,14 @@ jobs:
 
       - name: Package Helm chart
         run: |
-          helm package "${{ inputs.chart_dir }}" --version ${{ steps.semver.outputs.version }} --destination "${{ inputs.destination }}"
+          echo "Version: $VERSION"
+          DOCKER_VERSION=$(echo $VERSION | sed 's/+/_/g')
+
+          helm package helm/handler --destination . \
+            --version "$VERSION" \
+            --app-version "$DOCKER_VERSION"        
 
       - name: Push Helm chart to GHCR
         run: |
-          helm push "${{ inputs.destination }}/${{ inputs.chart_name }}-${{ steps.semver.outputs.version }}.tgz" "${{ inputs.registry }}"
+          repo=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          helm push handler-$VERSION.tgz oci://ghcr.io/$repo/charts

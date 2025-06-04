@@ -7,6 +7,10 @@ on:
         description: 'GOPRIVATE environment variable'
         required: false
         type: string
+      go_pats:
+        description: 'PAT for private Go modules'
+        required: false
+        type: string
 
 jobs:
   ko-build:
@@ -32,9 +36,13 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Version: $VERSION"
           
-      - name: Build image with ko
+      - name: Configure Go for private repos
         run: |
           if [ -n "${{ inputs.private_repos }}" ]; then
             echo "GOPRIVATE=${{ inputs.private_repos }}" >> $GITHUB_ENV
+            git config --global url."https://${inputs.go_pats}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
           fi
+      
+      - name: Build image with ko
+        run: |
           ko build --sbom=none --platform=linux/amd64 --tags=$VERSION --image-label="repo_url=${{ github.event.repository.html_url }},commit_sha=${{ github.sha }}"

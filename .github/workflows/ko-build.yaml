@@ -1,7 +1,12 @@
 name: Build with ko
 
 on:
-  workflow_call: {}
+  workflow_call: 
+    inputs:
+      private_repos:
+        description: 'GOPRIVATE environment variable'
+        required: false
+        type: string
 
 jobs:
   ko-build:
@@ -29,4 +34,7 @@ jobs:
           
       - name: Build image with ko
         run: |
+          if [ -n "${{ inputs.private_repos }}" ]; then
+            echo "GOPRIVATE=${{ inputs.private_repos }}" >> $GITHUB_ENV
+          fi
           ko build --sbom=none --platform=linux/amd64 --tags=$VERSION --image-label="repo_url=${{ github.event.repository.html_url }},commit_sha=${{ github.sha }}"

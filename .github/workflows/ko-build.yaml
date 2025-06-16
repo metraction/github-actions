@@ -1,7 +1,16 @@
 name: Build with ko
 
 on:
-  workflow_call: {}
+  workflow_call: 
+    inputs:
+      private_repos:
+        description: 'GOPRIVATE environment variable'
+        required: false
+        type: string
+    secrets:    
+      GH_ACCESS_TOKEN:
+        description: 'PAT for private Go modules'
+        required: false
 
 jobs:
   ko-build:
@@ -27,6 +36,13 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Version: $VERSION"
           
+      - name: Configure Go for private repos
+        run: |
+          if [ -n "${{ inputs.private_repos }}" ]; then
+            echo "GOPRIVATE=${{ inputs.private_repos }}" >> $GITHUB_ENV
+            git config --global url."https://${{ secrets.GH_ACCESS_TOKEN }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+          fi
+      
       - name: Build image with ko
         run: |
           ko build --sbom=none --platform=linux/amd64 --tags=$VERSION --image-label="repo_url=${{ github.event.repository.html_url }},commit_sha=${{ github.sha }}"

@@ -7,6 +7,11 @@ on:
         description: 'GOPRIVATE environment variable'
         required: false
         type: string
+      cgo_enabled:
+        description: 'Enable CGO for the build (1=enabled, 0=disabled)'
+        required: false
+        default: '0'
+        type: string
     secrets:    
       GH_ACCESS_TOKEN:
         description: 'PAT for private Go modules'
@@ -38,5 +43,7 @@ jobs:
           fi
       
       - name: Build image with ko
+        env:
+          CGO_ENABLED: ${{ inputs.cgo_enabled }}
         run: |
           ko build --sbom=none --platform=linux/amd64 --tags=$VERSION --image-label="repo_url=${{ github.event.repository.html_url }},commit_sha=${{ github.sha }}"

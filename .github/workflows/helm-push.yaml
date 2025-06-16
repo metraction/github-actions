@@ -51,7 +51,7 @@ jobs:
       - name: Generate version with semver.sh
         id: semver
         run: |
-          VERSION=$(curl -sSL "https://raw.githubusercontent.com/Tiktai/helm-publish/refs/heads/SA-2/branch-distance/scripts/semver.sh" | bash)
+          VERSION=$(curl -sSL "https://raw.githubusercontent.com/metraction/github-actions/refs/heads/SA-2/branch-distance/scripts/semver.sh" | bash)
 
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Version: $VERSION"

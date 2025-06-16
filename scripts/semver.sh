@@ -36,6 +36,6 @@ else
         PATCH=$(echo $VERSION | sed -E 's/^v?[0-9]+\.[0-9]+\.([0-9]+).*/\1/')
         PATCH=$(($PATCH + 1))
         BRANCH_ALNUM=$(echo "$CURRENT_BRANCH" | tr -cd '[:alnum:]')
-        echo "$MAJOR.$MINOR.$PATCH-$BRANCH_ALNUM+$SHORT_COMMIT"
+        echo "$MAJOR.$MINOR.$PATCH-$BRANCH_ALNUM-$DISTANCE+$SHORT_COMMIT"
     fi
 fi

@@ -8,7 +8,6 @@ VERSION=$(echo "$DESCRIBE" | sed -E 's/^v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
 if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+.*$ ]]; then
   VERSION="0.0.0"
 fi
-echo "Version from git describe: $VERSION"
 DISTANCE=$(echo "$DESCRIBE" | sed -E 's/^v?[0-9]+\.[0-9]+\.[0-9]+-([0-9]+)-g[0-9a-f]+$/\1/')
 SHORT_COMMIT=$(echo "$DESCRIBE" | sed -E 's/.*-g([0-9a-f]+)$/\1/')
 

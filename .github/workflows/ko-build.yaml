@@ -57,4 +57,4 @@ jobs:
         env:
           CGO_ENABLED: ${{ inputs.cgo_enabled }}
         run: |
-          ko build --sbom=none --platform=linux/amd64 --tags=$VERSION --image-label="repo_url=${{ github.event.repository.html_url }},commit_sha=${{ github.sha }}"
+          ko build --sbom=none --platform=linux/amd64 --bare --tags=$VERSION --image-label="repo_url=${{ github.event.repository.html_url }},commit_sha=${{ github.sha }}"

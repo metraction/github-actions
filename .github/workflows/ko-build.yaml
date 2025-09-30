@@ -40,7 +40,7 @@ jobs:
       - name: Generate version with semver.sh
         id: semver
         run: |
-          VERSION=$(curl -sSL "https://raw.githubusercontent.com/metraction/github-actions/refs/heads/main/scripts/semver.sh" | bash)
+          VERSION=$(curl -sSL "https://raw.githubusercontent.com/metraction/github-actions/refs/heads/incremental/scripts/semver.sh" | bash)
           VERSION=$(echo $VERSION | sed 's/+/_/g')
 
           echo "VERSION=$VERSION" >> $GITHUB_ENV

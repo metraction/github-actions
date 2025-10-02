@@ -44,8 +44,9 @@ jobs:
       - name: Generate version with semver.sh
         id: semver
         run: |
-          if [ -n "${{ inputs.version }}" ]; then
+          if [ "${{ inputs.version }}" != "" ]; then
             VERSION="${{ inputs.version }}"
+            echo "Version from input: $VERSION"
           else
             VERSION=$(curl -sSL "https://raw.githubusercontent.com/metraction/github-actions/refs/heads/main/scripts/semver.sh" | bash)
             VERSION=$(echo $VERSION | sed 's/+/_/g')

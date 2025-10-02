@@ -44,7 +44,7 @@ jobs:
       - name: Generate version with semver.sh
         id: semver
         run: |
-          if [ "${{ inputs.version }}" != "" ]; then
+          if [ -n "${{ inputs.version }}" ]; then
             VERSION="${{ inputs.version }}"
             echo "Version from input: $VERSION"
           else

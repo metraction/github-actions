@@ -54,11 +54,12 @@ jobs:
       - name: Generate version with semver.sh
         id: semver
         run: |
-          if [ "${{ inputs.version }}" != "" ]; then
+          if [ -n "${{ inputs.version }}" ]; then
             VERSION="${{ inputs.version }}"
             echo "Version from input: $VERSION"
           else
             VERSION=$(curl -sSL "https://raw.githubusercontent.com/metraction/github-actions/refs/heads/main/scripts/semver.sh" | bash)
+            echo "Version from semver.sh: $VERSION"
           fi
 
       - name: Package Helm chart

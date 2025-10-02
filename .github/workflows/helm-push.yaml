@@ -61,6 +61,7 @@ jobs:
             VERSION=$(curl -sSL "https://raw.githubusercontent.com/metraction/github-actions/refs/heads/main/scripts/semver.sh" | bash)
             echo "Version from semver.sh: $VERSION"
           fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Package Helm chart
         run: |

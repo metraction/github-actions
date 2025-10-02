@@ -58,7 +58,6 @@ jobs:
             VERSION="${{ inputs.version }}"
           else
             VERSION=$(curl -sSL "https://raw.githubusercontent.com/metraction/github-actions/refs/heads/main/scripts/semver.sh" | bash)
-            VERSION=$(echo $VERSION | sed 's/+/_/g')
           fi
 
       - name: Package Helm chart

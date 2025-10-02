@@ -1,7 +1,6 @@
 name: Push Helm Chart (Reusable)
 
-description: >
-  Reusable workflow to package and push a Helm chart to GHCR using semver from scripts/semver.sh.
+# Reusable workflow to package and push a Helm chart to GHCR using semver from scripts/semver.sh.
 
 on:
   workflow_call:
@@ -22,6 +21,10 @@ on:
       registry:
         description: 'OCI registry URL (e.g. oci://ghcr.io/org/charts)'
         required: true
+        type: string
+      version:
+        description: 'Version to use for the chart or image (overrides semver.sh)'
+        required: false
         type: string
 
 jobs:
@@ -51,10 +54,12 @@ jobs:
       - name: Generate version with semver.sh
         id: semver
         run: |
-          VERSION=$(curl -sSL "https://raw.githubusercontent.com/metraction/github-actions/refs/heads/main/scripts/semver.sh" | bash)
-
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "Version: $VERSION"
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION=$(curl -sSL "https://raw.githubusercontent.com/metraction/github-actions/refs/heads/main/scripts/semver.sh" | bash
+            VERSION=$(echo $VERSION | sed 's/+/_/g')
+          fi
 
       - name: Package Helm chart
         run: |

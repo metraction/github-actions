@@ -50,9 +50,9 @@ jobs:
           else
             VERSION=$(curl -sSL "https://raw.githubusercontent.com/metraction/github-actions/refs/heads/main/scripts/semver.sh" | bash)
             VERSION=$(echo $VERSION | sed 's/+/_/g')
+            echo "Version from semver.sh: $VERSION"
           fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "Version: $VERSION"
           
       - name: Configure Go for private repos
         run: |

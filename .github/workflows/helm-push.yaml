@@ -1,6 +1,6 @@
 name: Push Helm Chart (Reusable)
 
-# Reusable workflow to package and push a Helm chart to GHCR using semver from scripts/semver.sh.
+# Reusable workflow to package and push a Helm chart to GHCR using semver from scripts/semver.sh or input.
 
 on:
   workflow_call:
